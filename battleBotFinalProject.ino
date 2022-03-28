@@ -112,6 +112,7 @@ void loop() {
     // do other updates that need to happen more frequently than 10 times per second here...
     // e.g. checking limit switches...
   
+  //forward speed is declared at the top, add negatives to control the direction you want it to go
     if( ds.getGameState() == eAutonomous ) {
       if(autonomousMode == true){
         if(LT_M){
@@ -132,3 +133,4 @@ void loop() {
     }
   }
 }
+

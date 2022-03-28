@@ -11,7 +11,7 @@
 #include <Servo.h>
 #endif
 #if ELEGOO_HCSR04
-#include "hcsr04.h"
+#include "HCSR04.h"
 #endif
 
 // Motor pins

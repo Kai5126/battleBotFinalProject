@@ -2,8 +2,12 @@
 #include "elegoo-car.h"
 #include "DriverStation.h"
 
-// Simple Arduino Sketch that uses the Sample Driver Station.
-// Load this sketch and drive the Elegoo around using an XBox Controller.
+#define LT_R !digitalRead(10)
+#define LT_M !digitalRead(4)
+#define LT_L !digitalRead(2)
+
+bool autonomousMode = true; 
+// Demo code taken from wpilib
 
 // Create the ElegooCar object named myCar
 ElegooCar myCar;
@@ -24,30 +28,17 @@ void setup() {
   Serial.begin( 115200 );
   Serial.println( "Ready..." );
   myServo.attach( c_u8ServoPin );
+  pinMode(LT_R,INPUT);
+  pinMode(LT_M,INPUT);
+  pinMode(LT_L,INPUT);
 }
 
 // autonomous is called 10 times per second during Autonomous mode.
 // this function must not block as new data is received every 100ms
 //
 // you could implement line following here...
-void autonomous() {
+void autonomous(){
   int curTime = ds.getStateTimer();
-
-  // drive forward for 1000ms (1s)
-  if( curTime < 1000 )
-    myCar.setSpeed( FORWARD_SPEED, FORWARD_SPEED );
-
-  // for next 500 ms turn
-  else if( curTime < 1500 )
-    myCar.setSpeed( -TURN_SPEED, TURN_SPEED );
-
-  // drive straight again for 1000ms
-  else if( curTime < 2500 )
-    myCar.setSpeed( FORWARD_SPEED, FORWARD_SPEED );
-
-  // stop after 2.5 seconds
-  else
-    myCar.setSpeed( 0, 0 );
 }
 
 // teleop function is called every time there is new data from the DriverStation
@@ -118,10 +109,26 @@ void loop() {
     }
   }
 
-  // do other updates that need to happen more frequently than 10 times per second here...
-  // e.g. checking limit switches...
-
-  if( ds.getGameState() == eAutonomous ) {
-    // Could do line-following here
+    // do other updates that need to happen more frequently than 10 times per second here...
+    // e.g. checking limit switches...
+  
+    if( ds.getGameState() == eAutonomous ) {
+      if(autonomousMode == true){
+        if(LT_M){
+          myCar.setSpeed(FORWARD_SPEED, FORWARD_SPEED);
+        }
+        else if(LT_R) { 
+          myCar.setSpeed(FORWARD_SPEED, -FORWARD_SPEED);
+          while(LT_R);                             
+        }   
+        else if(LT_L) {
+          myCar.setSpeed(-FORWARD_SPEED, FORWARD_SPEED);
+          while(LT_L);
+        }
+        else if(LT_R && LT_M && LT_R){
+          myCar.setSpeed(0,0);
+          autonomousMode = false; 
+      }
+    }
   }
 }

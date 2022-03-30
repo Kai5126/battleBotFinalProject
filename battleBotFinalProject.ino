@@ -2,9 +2,9 @@
 #include "elegoo-car.h"
 #include "DriverStation.h"
 
-#define LT_R !digitalRead(10)
-#define LT_M !digitalRead(4)
-#define LT_L !digitalRead(2)
+#define LT_R !digitalRead(4)
+#define LT_M !digitalRead(2)
+#define LT_L !digitalRead(10)
 
 bool autonomousMode = true; 
 // Demo code taken from wpilib
@@ -14,7 +14,7 @@ ElegooCar myCar;
 // Create the DriverStation object named ds
 DriverStation ds;
 
-#define AUTO_FWD_SPEED 156
+#define AUTO_FWD_SPEED 154
 #define FORWARD_SPEED 255
 #define TURN_SPEED 64
 
@@ -94,7 +94,9 @@ void loop() {
     // now, handle the driver station data depending on what game state we are in
     switch( ds.getGameState() ) {
       case ePreGame:
+      myCar.setSpeed( 0, 0 );
       case ePostGame:
+      autonomousMode = true;
         // During Pre and Post game, the Elegoo should not move!
         myCar.setSpeed( 0, 0 );
         break;
@@ -115,22 +117,27 @@ void loop() {
   //forward speed is declared at the top, add negatives to control the direction you want it to go
     if( ds.getGameState() == eAutonomous ) {
       if(autonomousMode == true){
-        if(LT_M){
-          myCar.setSpeed(FORWARD_SPEED, FORWARD_SPEED);
+         if(LT_R && LT_M && LT_L){
+    Serial.println("stopping auto");
+    autonomousMode = false;
+    myCar.setSpeed( -AUTO_FWD_SPEED, -AUTO_FWD_SPEED );
+    delay(200);
+    myCar.setSpeed( 0, 0 ); 
         }
-        else if(LT_R) { 
-          myCar.setSpeed(FORWARD_SPEED, -FORWARD_SPEED);
+    else if(LT_M){
+        Serial.println("called forward");
+          myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
+         }
+       else if(LT_R) { 
+        Serial.println("called right");
+          myCar.setSpeed(AUTO_FWD_SPEED, -AUTO_FWD_SPEED);
           while(LT_R);                             
         }   
-        else if(LT_L) {
-          myCar.setSpeed(-FORWARD_SPEED, FORWARD_SPEED);
+       else if(LT_L) {
+        Serial.println("called left");
+          myCar.setSpeed(-AUTO_FWD_SPEED, AUTO_FWD_SPEED);
           while(LT_L);
-        }
-        else if(LT_R && LT_M && LT_R){
-          myCar.setSpeed(0,0);
-          autonomousMode = false; 
       }
     }
   }
 }
-

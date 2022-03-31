@@ -2,9 +2,9 @@
 #include "elegoo-car.h"
 #include "DriverStation.h"
 
-#define LT_R !digitalRead(4)
-#define LT_M !digitalRead(2)
-#define LT_L !digitalRead(10)
+#define LT_R !digitalRead(10)
+#define LT_M !digitalRead(4)
+#define LT_L !digitalRead(2)
 
 bool autonomousMode = true; 
 // Demo code taken from wpilib

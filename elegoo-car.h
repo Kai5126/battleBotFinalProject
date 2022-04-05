@@ -1,9 +1,9 @@
 #ifndef _ELEGOO_CAR_H
 #define _ELEGOO_CAR_H
 
-#if !defined(ELEGOO_SERVO)
-#define ELEGOO_SERVO 0
-#endif
+//#if !defined(ELEGOO_SERVO)
+//#define ELEGOO_SERVO 0
+//#endif
 #if !defined(ELEGOO_HCSR04)
 #define ELEGOO_HCSR04 0
 #endif
@@ -21,11 +21,6 @@ const uint8_t c_u8IN1Pin = 7;
 const uint8_t c_u8IN2Pin = 8;
 const uint8_t c_u8IN3Pin = 9;
 const uint8_t c_u8IN4Pin = 11;
-
-// Line tracking pins
-const uint8_t c_u8LineRightPin = 10;
-const uint8_t c_u8LineMiddlePin = 4;
-const uint8_t c_u8LineLeftPin = 2;
 
 // Servo
 const uint8_t c_u8ServoPin = 3;
@@ -102,10 +97,6 @@ public:
 		pinMode( c_u8IN3Pin, OUTPUT );
 		pinMode( c_u8IN4Pin, OUTPUT );
 		
-		// Set Line Tracking Pins to Input
-		pinMode( c_u8LineRightPin, INPUT );
-		pinMode( c_u8LineMiddlePin, INPUT );
-		pinMode( c_u8LineLeftPin, INPUT );
 		
 	}
 	

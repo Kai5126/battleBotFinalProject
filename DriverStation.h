@@ -116,6 +116,61 @@ public:
     return WDOG_MASK((m_u16Buttons & (1 << buttonId)) ? true : false);
   }
   
+  // bool buttonTest (uint8_t buttonId){
+  //   if(buttonId == 1){
+  //     Serial.print("Pressed button 1");
+  //   }
+  //   else if(buttonId == 2){
+  //     Serial.print("Pressed button 2");
+  //   }
+  //   else if(buttonId == 3){
+  //     Serial.print("Pressed button 3");
+  //   }
+  //   else if(buttonId == 4){
+  //     Serial.print("Pressed button 4");
+  //   }
+  //   else if(buttonId == 5){
+  //     Serial.print("Pressed button 5");
+  //   }
+  //   else if(buttonId == 6){
+  //     Serial.print("Pressed button 6");
+  //   }
+  //   else if(buttonId == 5){
+  //     Serial.print("Pressed button 5");
+  //   }
+  //   else if(buttonId == 6){
+  //     Serial.print("Pressed button 6");
+  //   }
+  //   else if(buttonId == 7){
+  //     Serial.print("Pressed button 7");
+  //   }
+  //   else if(buttonId == 8){
+  //     Serial.print("Pressed button 8");
+  //   }
+  //   else if(buttonId == 9){
+  //     Serial.print("Pressed button 10");
+  //   }
+  //   else if(buttonId == 11){
+  //     Serial.print("Pressed button 11");
+  //   }
+  //   else if(buttonId == 12){
+  //     Serial.print("Pressed button 12");
+  //   }
+  //   else if(buttonId == 13){
+  //     Serial.print("Pressed button 13");
+  //   }
+  //   else if(buttonId == 14){
+  //     Serial.print("Pressed button 14");
+  //   }
+  //   else if(buttonId == 15){
+  //     Serial.print("Pressed button 15"); 
+  //   }
+  //   else if(buttonId == 16){
+  //     Serial.print("Pressed button 16");
+  //   }
+  //   return true;
+  // }
+
   // Update function must be called repeatedly to read control data from
   // the DriverStation application.
   // When this function returns true, it indicates that new controller

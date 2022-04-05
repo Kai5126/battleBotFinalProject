@@ -22,12 +22,20 @@ DriverStation ds;
 
 // create a Servo object named myServo
 Servo myServo;
+Servo myServo2;
+Servo myServo3;
+Servo myServo4;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin( 115200 );
   Serial.println( "Ready..." );
+  Serial.println("lol im going to eat a servo motor")
   myServo.attach( c_u8ServoPin );
+  myServo2.attach(c_u8ServoPin2);
+  myServo3.attach(c_u8ServoPin3);
+  myServo4.attach(c_u8ServoPin4);
+
   pinMode(LT_R,INPUT);
   pinMode(LT_M,INPUT);
   pinMode(LT_L,INPUT);
@@ -71,6 +79,10 @@ void teleop() {
 
   // Get left X to use for Servo position
   int servoPos = ds.getLX();
+  int servoPos2 = ds.getLY();
+  int servoPos3 = ds.getLTrig();
+  int servoPos4 = ds.getRTrig();
+
 
   // Joystick input values range from -256 - 255, but the Servo is expects
   // values from 0-180, so the numbers have to be scaled.
@@ -81,6 +93,16 @@ void teleop() {
   servoPos >>= 8;  // shifting right 8 is the same as dividing by 256 but is faster
 
   myServo.write( servoPos + 90 );
+  
+  // Joystick input values range from -256 - 255, but the Servo is expects
+  // values from 0-180, so the numbers have to be scaled.
+  // these statements are broken into separate lines to prevent the compiler from
+  // calculating the value 90/256.  As an integer this would compute to 0
+  servoPos2 *= 90;
+  // servoPos /= 256;
+  servoPos2 >>= 8;  // shifting right 8 is the same as dividing by 256 but is faster
+
+  myServo2.write( servoPos + 90 );
 }
 
 void loop() {

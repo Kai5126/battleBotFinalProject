@@ -29,6 +29,9 @@ const uint8_t c_u8LineLeftPin = 2;
 
 // Servo
 const uint8_t c_u8ServoPin = 3;
+const uint8_t c_u8ServoPin2 = 2;
+const uint8_t c_u8ServoPin3 = 4;
+const uint8_t c_u8ServoPin4 = 10; 
 
 // Ultrasonic Sensor
 const uint8_t c_u8TrigPin = A5;
@@ -38,9 +41,10 @@ const uint8_t c_u8EchoPin = A4;
 const uint8_t c_u8IRRecvPin = 12;
 
 class ElegooCar {
-#if ELEGOO_SERVO
 	Servo	m_USServo;
-#endif
+	Servo m_USServo2;
+	Servo m_USServo3;
+	Servo m_USServo4;
 #if ELEGOO_HCSR04
 	HCSR04	m_US;
 #endif
@@ -120,7 +124,7 @@ public:
       m_i16PrevRight = i16RightPwr;    
     }
 	}
-#if ELEGO_SERVO
+
   void setServo( int8_t s8Heading ) {
 
     if( s8Heading > 85 )
@@ -137,7 +141,58 @@ public:
     delay( 1000 );
     m_USServo.detach();
   }
-#endif
+
+  void setServo2( int8_t s8Heading ) {
+
+    if( s8Heading > 85 )
+      s8Heading = 85;
+    else if( s8Heading < -85 )
+      s8Heading = -85;
+
+    Serial.print( s8Heading );
+    Serial.print( "  " );
+    Serial.println( (uint8_t)90 + s8Heading );
+    
+    m_USServo2.attach( c_u8ServoPin2 );
+    m_USServo2.write( (uint8_t)90 + s8Heading );
+    delay( 1000 );
+    m_USServo2.detach();
+  }
+  
+  void setServo3( int8_t s8Heading ) {
+
+    if( s8Heading > 85 )
+      s8Heading = 85;
+    else if( s8Heading < -85 )
+      s8Heading = -85;
+
+    Serial.print( s8Heading );
+    Serial.print( "  " );
+    Serial.println( (uint8_t)90 + s8Heading );
+    
+    m_USServo3.attach( c_u8ServoPin2 );
+    m_USServo3.write( (uint8_t)90 + s8Heading );
+    delay( 1000 );
+    m_USServo3.detach();
+  }
+  
+  void setServo4( int8_t s8Heading ) {
+
+    if( s8Heading > 85 )
+      s8Heading = 85;
+    else if( s8Heading < -85 )
+      s8Heading = -85;
+
+    Serial.print( s8Heading );
+    Serial.print( "  " );
+    Serial.println( (uint8_t)90 + s8Heading );
+    
+    m_USServo4.attach( c_u8ServoPin2 );
+    m_USServo4.write( (uint8_t)90 + s8Heading );
+    delay( 1000 );
+    m_USServo4.detach();
+  }
+
 
 #if ELEGOO_HCSR04
   void setUSRate( uint16_t u16Delay ) {

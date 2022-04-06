@@ -40,9 +40,6 @@ void setup() {
 // you could implement line following here...
 void autonomous(){
   int curTime = ds.getStateTimer();
-  myServo.write (90);
-        delay(500);
-        myServo.write (0);
 }
 
 // teleop function is called every time there is new data from the DriverStation

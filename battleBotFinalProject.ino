@@ -83,9 +83,9 @@ void teleop() {
   // Get left X to use for Servo position
   int servoPos = ds.getLX();
   int servoPos2 = ds.getLY();
-  bool servoPosExtend3 = ds.getButton(5);
+  bool servoPosExtend3 = ds.getButton(0);
   bool servoPosRetract3 = ds.getButton(1);
-  bool servoPosExtend4 = ds.getButton(6);
+  bool servoPosExtend4 = ds.getButton(2);
   bool servoPosRetract4 = ds.getButton(3);
 
   // Joystick input values range from -256 - 255, but the Servo is expects

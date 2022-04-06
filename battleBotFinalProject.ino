@@ -40,6 +40,14 @@ void setup() {
 // you could implement line following here...
 void autonomous(){
   int curTime = ds.getStateTimer();
+  myServo.write(90);
+  Serial.println("writing 90");
+  delay(500);
+  Serial.println("delay 500");
+  myServo.write(0);
+  Serial.println("writing 0");
+  delay(500);
+  Serial.println("deleayding 500");
 }
 
 // teleop function is called every time there is new data from the DriverStation
@@ -75,8 +83,10 @@ void teleop() {
   // Get left X to use for Servo position
   int servoPos = ds.getLX();
   int servoPos2 = ds.getLY();
-  int servoPos3 = ds.getLTrig();
-  int servoPos4 = ds.getRTrig();
+  bool servoPosExtend3 = ds.getButton(5);
+  bool servoPosRetract3 = ds.getButton(1);
+  bool servoPosExtend4 = ds.getButton(6);
+  bool servoPosRetract4 = ds.getButton(3);
 
   // Joystick input values range from -256 - 255, but the Servo is expects
   // values from 0-180, so the numbers have to be scaled.
@@ -98,32 +108,36 @@ void teleop() {
 
   myServo2.write( servoPos2 + 90 );
 
-  
-  // Joystick input values range from -256 - 255, but the Servo is expects
-  // values from 0-180, so the numbers have to be scaled.
-  // these statements are broken into separate lines to prevent the compiler from
-  // calculating the value 90/256.  As an integer this would compute to 0
-  servoPos3 *= 90;
-  // servoPos /= 256;
-  servoPos3 >>= 8;  // shifting right 8 is the same as dividing by 256 but is faster
+if (servoPosExtend3 == true){
+  Serial.println("extend 3 true");
+  myServo3.write(180);
+}
+else{
+  myServo3.write(90);
+}
 
-  myServo3.write( servoPos3 + 90 );
+if (servoPosRetract3 == true){
+  Serial.println("retract 3 true");
+  myServo3.write (0);
+}
 
-  
-  // Joystick input values range from -256 - 255, but the Servo is expects
-  // values from 0-180, so the numbers have to be scaled.
-  // these statements are broken into separate lines to prevent the compiler from
-  // calculating the value 90/256.  As an integer this would compute to 0
-  servoPos4 *= 90;
-  // servoPos /= 256;
-  servoPos4 >>= 8;  // shifting right 8 is the same as dividing by 256 but is faster
+if (servoPosExtend4 == true){
+  Serial.println("extend 4 true");
+  myServo4.write(180);
+}
+else{
+  myServo4.write(90);
+}
 
-  myServo4.write( servoPos4 + 90 );
+if (servoPosRetract4 == true){
+  Serial.println("retract 4 true");
+  myServo4.write (0);
+}
 }
 
 void loop() {
   // Update the Elegoo Car state
-  int res = myCar.u16Update();
+  uint16_t res = myCar.u16Update();
 
   // update the DriverStation class - this will check if there is new data from the
   // DriverStation application.

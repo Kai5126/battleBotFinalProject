@@ -1,9 +1,7 @@
+// Driverstation definitions
 #ifndef DRIVERSTATION_H
 #define DRIVERSTATION_H
 
-// ToDo:
-//  Add Watchdog to ensure loops are not taking too long.
-// 
 #define DS_DEBUG 0
 
 #define WDOG_MASK( x ) (bWDExpired() ? 0 : (x))
@@ -11,6 +9,7 @@
 // Data should arrive every 100ms on average...give a little leaway
 #define DATA_EXPIRE_TIME    110
 
+// Declarations of game states 
 enum {
   ePreGame,
   eAutonomous,
@@ -18,6 +17,7 @@ enum {
   ePostGame
 };
 
+// Creating class DriverStation
 class DriverStation {
   uint32_t  m_u32StateChangeTime;
   uint32_t  m_u32DataExpireTime;
@@ -52,6 +52,7 @@ class DriverStation {
   bool     m_bValid;
   bool     m_bSlowSent;
   
+// Driverstation debug tool
 #if DS_DEBUG
   char grcHex[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
   void ToHex( char *psz, uint8_t v )
@@ -63,6 +64,7 @@ class DriverStation {
   }
 #endif
 
+// Watchdog, which makes sure loops don't take too long 
   void vWatchDogReset() {
     m_u32DataExpireTime = millis() + DATA_EXPIRE_TIME;
     m_bSlowSent = false;
@@ -110,7 +112,9 @@ public:
   // Request button state
   bool getButton( uint8_t buttonId ) {
     if( buttonId >=16 ) {
-      //commented out so it doesn't SPAM you when you use buttons 
+      /* Commented out print statement as it can spam you when you use buttons 
+       * Unnecessary if you don't have more than 16 buttons
+       */
       //Serial.print( "DriverStation::getButton(): Invalid Button ID requested " ); Serial.println( buttonId );
       return false;
     }

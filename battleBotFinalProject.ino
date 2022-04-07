@@ -1,53 +1,68 @@
+// Demo code taken from WWFirst, further modified by @Kai5126
+
+//Necessary libraries 
 #include <Servo.h>
 #include "elegoo-car.h"
 #include "DriverStation.h"
 
-#define LT_R !digitalRead(10)
-#define LT_M !digitalRead(4)
-#define LT_L !digitalRead(2)
-
+// Used to check if autonomous mode is active
 bool autonomousMode = true; 
-// Demo code taken from wpilib
 
 // Create the ElegooCar object named myCar
 ElegooCar myCar;
 // Create the DriverStation object named ds
 DriverStation ds;
 
+// Speeds to set the motor to (0-255)
 #define AUTO_FWD_SPEED 154
 #define FORWARD_SPEED 255
 #define TURN_SPEED 64
 
-#define DEADBAND 16 // Joystick values close to 0 that we'll ignore
+// Joystick values close to 0 that we'll ignore
+#define DEADBAND 16 
 
-// create a Servo object named myServo
+// Creates 4 servos to control the robot arm
 Servo myServo;
+Servo myServo2;
+Servo myServo3;
+Servo myServo4;
 
 void setup() {
-  // put your setup code here, to run once:
+ /* Put your setup code here, to run once:
+  * The current setup here is initializing the console and attaching the servo pins
+  */
   Serial.begin( 115200 );
   Serial.println( "Ready..." );
+  Serial.println("lol im going to eat a servo motor");
   myServo.attach( c_u8ServoPin );
-  pinMode(LT_R,INPUT);
-  pinMode(LT_M,INPUT);
-  pinMode(LT_L,INPUT);
+  myServo2.attach(c_u8ServoPin2);
+  myServo3.attach(c_u8ServoPin3);
+  myServo4.attach(c_u8ServoPin4);
 }
 
-// autonomous is called 10 times per second during Autonomous mode.
-// this function must not block as new data is received every 100ms
-//
-// you could implement line following here...
+ /* Autonomous is called 10 times per second during Autonomous mode.
+  * This function must not block as new data is received every 100ms
+  * Will be used to drive to zone D while picking up multiple cups
+  */  
 void autonomous(){
   int curTime = ds.getStateTimer();
+  myServo.write(90);
+  Serial.println("writing 90");
+  delay(500);
+  Serial.println("delay 500");
+  myServo.write(0);
+  Serial.println("writing 0");
+  delay(500);
+  Serial.println("deleayding 500");
 }
 
-// teleop function is called every time there is new data from the DriverStation
-// this function must not block as new data is received every 100ms
+// Teleop function is called every time there is new data from the DriverStation
+// This function must not block as new data is received every 100ms
 void teleop() {
-  // get the Right Y axis and use this as the "forward speed" for the robot
+  // Get the Right Y axis and use this as the "forward speed" for the robot
   int fwd = ds.getRY();
 
-  // get the Right X axis and use it as the rate of turn
+  // Get the Right X axis and use it as the rate of turn
   int turn = ds.getRX();
 
   // Apply the turn adding the turn rate to the left wheels
@@ -62,48 +77,96 @@ void teleop() {
   if( right > -DEADBAND && right < DEADBAND )
     right = 0;
 
-  // Now tell the Elegoo how fast to turn the left and right wheels
+  // This tells the Elegoo how fast to turn the left and right wheels
+  // Using the values from the right analog stick  
   myCar.setSpeed( left, right );       
 
-  // This is where you would likely add your code to control your attachment
-  // As an example, we will set the Ultrasonic Range Finder direction based on
-  // the Left stick X value
+  /* This is where you would likely add your code to control your attachment
+   * For example, the 4 Servo motors are controlled here 
+   */
 
-  // Get left X to use for Servo position
+
+  /* Controls 2 servos by using the X and Y axis of the left analog stick 
+   * Controls 2 servos by extending 90° in either direction
+   * 1 face button to extend 90° in one direction
+   * Release button for servo position to reset
+   */
   int servoPos = ds.getLX();
+  int servoPos2 = ds.getLY();
+  bool servoPosExtend3 = ds.getButton(0);
+  bool servoPosRetract3 = ds.getButton(1);
+  bool servoPosExtend4 = ds.getButton(2);
+  bool servoPosRetract4 = ds.getButton(3);
 
-  // Joystick input values range from -256 - 255, but the Servo is expects
-  // values from 0-180, so the numbers have to be scaled.
-  // these statements are broken into separate lines to prevent the compiler from
-  // calculating the value 90/256.  As an integer this would compute to 0
+  /* Joystick input values range from -256 - 255, but the Servo expects
+   * values from 0-180, so the numbers have to be scaled.
+   * These statements are broken into separate lines to prevent the compiler from
+   * calculating the value 90/256.  As an integer this would compute to 0
+   */
   servoPos *= 90;
   // servoPos /= 256;
-  servoPos >>= 8;  // shifting right 8 is the same as dividing by 256 but is faster
-
+  servoPos >>= 8;  // Shifting right 8 is the same as dividing by 256 but is faster
+  // Writes the value to the servo
   myServo.write( servoPos + 90 );
+  
+  // Same function and use as above, only for the 2nd servo
+  servoPos2 *= 90;
+  // servoPos2 /= 256;
+  servoPos2 >>= 8;  // Shifting right 8 is the same as dividing by 256 but is faster
+  // Writes the value to the servo
+  myServo2.write( servoPos2 + 90 );
+
+  /* Checks if either the extend or retract buttons are pressed
+   * If one is pressed write the given value to servo3
+   * If not keep servo3 at 90° (default)
+   */ 
+  if (servoPosExtend3 == true){
+    myServo3.write(180);
+  }
+  else{
+    myServo3.write(90);
+  }
+  
+  if (servoPosRetract3 == true){
+    myServo3.write (0);
+  }
+  // Same as servo3 extend/retract, but for servo4
+  if (servoPosExtend4 == true){
+    myServo4.write(180);
+  }
+  else{
+    myServo4.write(90);
+  }
+
+  if (servoPosRetract4 == true){
+    myServo4.write (0);
+  }
 }
 
 void loop() {
   // Update the Elegoo Car state
-  int res = myCar.u16Update();
+  uint16_t res = myCar.u16Update();
 
   // update the DriverStation class - this will check if there is new data from the
   // DriverStation application.
   // ds.bUpdate() returns true if new data has been received (10 times/second)
   if( ds.bUpdate() ) {
     // now, handle the driver station data depending on what game state we are in
+    // During Pre and Post game, the Elegoo should not move!
     switch( ds.getGameState() ) {
       case ePreGame:
       myCar.setSpeed( 0, 0 );
+      
       case ePostGame:
       autonomousMode = true;
-        // During Pre and Post game, the Elegoo should not move!
         myCar.setSpeed( 0, 0 );
         break;
+  
       case eAutonomous:
         // Handle Autonomous mode
         autonomous();
         break;
+
       case eTeleop:
         // Handle telop mode
         teleop();
@@ -113,31 +176,8 @@ void loop() {
 
     // do other updates that need to happen more frequently than 10 times per second here...
     // e.g. checking limit switches...
-  
-  //forward speed is declared at the top, add negatives to control the direction you want it to go
-    if( ds.getGameState() == eAutonomous ) {
+      if( ds.getGameState() == eAutonomous ) {
       if(autonomousMode == true){
-         if(LT_R && LT_M && LT_L){
-    Serial.println("stopping auto");
-    autonomousMode = false;
-    myCar.setSpeed( -AUTO_FWD_SPEED, -AUTO_FWD_SPEED );
-    delay(200);
-    myCar.setSpeed( 0, 0 ); 
-        }
-    else if(LT_M){
-        Serial.println("called forward");
-          myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
-         }
-       else if(LT_R) { 
-        Serial.println("called right");
-          myCar.setSpeed(AUTO_FWD_SPEED, -AUTO_FWD_SPEED);
-          while(LT_R);                             
-        }   
-       else if(LT_L) {
-        Serial.println("called left");
-          myCar.setSpeed(-AUTO_FWD_SPEED, AUTO_FWD_SPEED);
-          while(LT_L);
-      }
     }
   }
 }

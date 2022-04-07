@@ -2,11 +2,8 @@
 #include "elegoo-car.h"
 #include "DriverStation.h"
 
-#define LT_R !digitalRead(10)
-#define LT_M !digitalRead(4)
-#define LT_L !digitalRead(2)
-
 bool autonomousMode = true; 
+
 // Demo code taken from wpilib
 
 // Create the ElegooCar object named myCar
@@ -22,15 +19,19 @@ DriverStation ds;
 
 // create a Servo object named myServo
 Servo myServo;
+Servo myServo2;
+Servo myServo3;
+Servo myServo4;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin( 115200 );
   Serial.println( "Ready..." );
+  Serial.println("lol im going to eat a servo motor");
   myServo.attach( c_u8ServoPin );
-  pinMode(LT_R,INPUT);
-  pinMode(LT_M,INPUT);
-  pinMode(LT_L,INPUT);
+  myServo2.attach(c_u8ServoPin2);
+  myServo3.attach(c_u8ServoPin3);
+  myServo4.attach(c_u8ServoPin4);
 }
 
 // autonomous is called 10 times per second during Autonomous mode.
@@ -39,6 +40,14 @@ void setup() {
 // you could implement line following here...
 void autonomous(){
   int curTime = ds.getStateTimer();
+  myServo.write(90);
+  Serial.println("writing 90");
+  delay(500);
+  Serial.println("delay 500");
+  myServo.write(0);
+  Serial.println("writing 0");
+  delay(500);
+  Serial.println("deleayding 500");
 }
 
 // teleop function is called every time there is new data from the DriverStation
@@ -69,8 +78,15 @@ void teleop() {
   // As an example, we will set the Ultrasonic Range Finder direction based on
   // the Left stick X value
 
+
+
   // Get left X to use for Servo position
   int servoPos = ds.getLX();
+  int servoPos2 = ds.getLY();
+  bool servoPosExtend3 = ds.getButton(0);
+  bool servoPosRetract3 = ds.getButton(1);
+  bool servoPosExtend4 = ds.getButton(2);
+  bool servoPosRetract4 = ds.getButton(3);
 
   // Joystick input values range from -256 - 255, but the Servo is expects
   // values from 0-180, so the numbers have to be scaled.
@@ -81,11 +97,47 @@ void teleop() {
   servoPos >>= 8;  // shifting right 8 is the same as dividing by 256 but is faster
 
   myServo.write( servoPos + 90 );
+  
+  // Joystick input values range from -256 - 255, but the Servo is expects
+  // values from 0-180, so the numbers have to be scaled.
+  // these statements are broken into separate lines to prevent the compiler from
+  // calculating the value 90/256.  As an integer this would compute to 0
+  servoPos2 *= 90;
+  // servoPos /= 256;
+  servoPos2 >>= 8;  // shifting right 8 is the same as dividing by 256 but is faster
+
+  myServo2.write( servoPos2 + 90 );
+
+if (servoPosExtend3 == true){
+  Serial.println("extend 3 true");
+  myServo3.write(180);
+}
+else{
+  myServo3.write(90);
+}
+
+if (servoPosRetract3 == true){
+  Serial.println("retract 3 true");
+  myServo3.write (0);
+}
+
+if (servoPosExtend4 == true){
+  Serial.println("extend 4 true");
+  myServo4.write(180);
+}
+else{
+  myServo4.write(90);
+}
+
+if (servoPosRetract4 == true){
+  Serial.println("retract 4 true");
+  myServo4.write (0);
+}
 }
 
 void loop() {
   // Update the Elegoo Car state
-  int res = myCar.u16Update();
+  uint16_t res = myCar.u16Update();
 
   // update the DriverStation class - this will check if there is new data from the
   // DriverStation application.
@@ -95,6 +147,7 @@ void loop() {
     switch( ds.getGameState() ) {
       case ePreGame:
       myCar.setSpeed( 0, 0 );
+
       case ePostGame:
       autonomousMode = true;
         // During Pre and Post game, the Elegoo should not move!
@@ -117,27 +170,6 @@ void loop() {
   //forward speed is declared at the top, add negatives to control the direction you want it to go
     if( ds.getGameState() == eAutonomous ) {
       if(autonomousMode == true){
-         if(LT_R && LT_M && LT_L){
-    Serial.println("stopping auto");
-    autonomousMode = false;
-    myCar.setSpeed( -AUTO_FWD_SPEED, -AUTO_FWD_SPEED );
-    delay(200);
-    myCar.setSpeed( 0, 0 ); 
-        }
-    else if(LT_M){
-        Serial.println("called forward");
-          myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
-         }
-       else if(LT_R) { 
-        Serial.println("called right");
-          myCar.setSpeed(AUTO_FWD_SPEED, -AUTO_FWD_SPEED);
-          while(LT_R);                             
-        }   
-       else if(LT_L) {
-        Serial.println("called left");
-          myCar.setSpeed(-AUTO_FWD_SPEED, AUTO_FWD_SPEED);
-          while(LT_L);
-      }
+}
     }
-  }
 }

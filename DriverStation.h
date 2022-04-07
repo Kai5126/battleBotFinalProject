@@ -110,12 +110,14 @@ public:
   // Request button state
   bool getButton( uint8_t buttonId ) {
     if( buttonId >=16 ) {
-      Serial.print( "DriverStation::getButton(): Invalid Button ID requested " ); Serial.println( buttonId );
+      //commented out so it doesn't SPAM you when you use buttons 
+      //Serial.print( "DriverStation::getButton(): Invalid Button ID requested " ); Serial.println( buttonId );
       return false;
     }
     return WDOG_MASK((m_u16Buttons & (1 << buttonId)) ? true : false);
   }
   
+
   // Update function must be called repeatedly to read control data from
   // the DriverStation application.
   // When this function returns true, it indicates that new controller

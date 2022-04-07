@@ -1,9 +1,9 @@
 #ifndef _ELEGOO_CAR_H
 #define _ELEGOO_CAR_H
 
-#if !defined(ELEGOO_SERVO)
-#define ELEGOO_SERVO 0
-#endif
+//#if !defined(ELEGOO_SERVO)
+//#define ELEGOO_SERVO 0
+//#endif
 #if !defined(ELEGOO_HCSR04)
 #define ELEGOO_HCSR04 0
 #endif
@@ -22,13 +22,11 @@ const uint8_t c_u8IN2Pin = 8;
 const uint8_t c_u8IN3Pin = 9;
 const uint8_t c_u8IN4Pin = 11;
 
-// Line tracking pins
-const uint8_t c_u8LineRightPin = 10;
-const uint8_t c_u8LineMiddlePin = 4;
-const uint8_t c_u8LineLeftPin = 2;
-
 // Servo
 const uint8_t c_u8ServoPin = 3;
+const uint8_t c_u8ServoPin2 = 2;
+const uint8_t c_u8ServoPin3 = 4;
+const uint8_t c_u8ServoPin4 = 10; 
 
 // Ultrasonic Sensor
 const uint8_t c_u8TrigPin = A5;
@@ -38,9 +36,10 @@ const uint8_t c_u8EchoPin = A4;
 const uint8_t c_u8IRRecvPin = 12;
 
 class ElegooCar {
-#if ELEGOO_SERVO
 	Servo	m_USServo;
-#endif
+	Servo m_USServo2;
+	Servo m_USServo3;
+	Servo m_USServo4;
 #if ELEGOO_HCSR04
 	HCSR04	m_US;
 #endif
@@ -98,10 +97,6 @@ public:
 		pinMode( c_u8IN3Pin, OUTPUT );
 		pinMode( c_u8IN4Pin, OUTPUT );
 		
-		// Set Line Tracking Pins to Input
-		pinMode( c_u8LineRightPin, INPUT );
-		pinMode( c_u8LineMiddlePin, INPUT );
-		pinMode( c_u8LineLeftPin, INPUT );
 		
 	}
 	
@@ -120,7 +115,7 @@ public:
       m_i16PrevRight = i16RightPwr;    
     }
 	}
-#if ELEGO_SERVO
+
   void setServo( int8_t s8Heading ) {
 
     if( s8Heading > 85 )
@@ -137,7 +132,58 @@ public:
     delay( 1000 );
     m_USServo.detach();
   }
-#endif
+
+  void setServo2( int8_t s8Heading ) {
+
+    if( s8Heading > 85 )
+      s8Heading = 85;
+    else if( s8Heading < -85 )
+      s8Heading = -85;
+
+    Serial.print( s8Heading );
+    Serial.print( "  " );
+    Serial.println( (uint8_t)90 + s8Heading );
+    
+    m_USServo2.attach( c_u8ServoPin2 );
+    m_USServo2.write( (uint8_t)90 + s8Heading );
+    delay( 1000 );
+    m_USServo2.detach();
+  }
+  
+  void setServo3( int8_t s8Heading ) {
+
+    if( s8Heading > 85 )
+      s8Heading = 85;
+    else if( s8Heading < -85 )
+      s8Heading = -85;
+
+    Serial.print( s8Heading );
+    Serial.print( "  " );
+    Serial.println( (uint8_t)90 + s8Heading );
+    
+    m_USServo3.attach( c_u8ServoPin2 );
+    m_USServo3.write( (uint8_t)90 + s8Heading );
+    delay( 1000 );
+    m_USServo3.detach();
+  }
+  
+  void setServo4( int8_t s8Heading ) {
+
+    if( s8Heading > 85 )
+      s8Heading = 85;
+    else if( s8Heading < -85 )
+      s8Heading = -85;
+
+    Serial.print( s8Heading );
+    Serial.print( "  " );
+    Serial.println( (uint8_t)90 + s8Heading );
+    
+    m_USServo4.attach( c_u8ServoPin2 );
+    m_USServo4.write( (uint8_t)90 + s8Heading );
+    delay( 1000 );
+    m_USServo4.detach();
+  }
+
 
 #if ELEGOO_HCSR04
   void setUSRate( uint16_t u16Delay ) {

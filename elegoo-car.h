@@ -1,14 +1,12 @@
+// Definitions and libraries
+
 #ifndef _ELEGOO_CAR_H
 #define _ELEGOO_CAR_H
 
-//#if !defined(ELEGOO_SERVO)
-//#define ELEGOO_SERVO 0
-//#endif
+#include <Servo.h>
+
 #if !defined(ELEGOO_HCSR04)
 #define ELEGOO_HCSR04 0
-#endif
-#if ELEGOO_SERVO
-#include <Servo.h>
 #endif
 #if ELEGOO_HCSR04
 #include "HCSR04.h"
@@ -22,19 +20,21 @@ const uint8_t c_u8IN2Pin = 8;
 const uint8_t c_u8IN3Pin = 9;
 const uint8_t c_u8IN4Pin = 11;
 
-// Servo
+// Servo pins
 const uint8_t c_u8ServoPin = 3;
 const uint8_t c_u8ServoPin2 = 2;
 const uint8_t c_u8ServoPin3 = 4;
 const uint8_t c_u8ServoPin4 = 10; 
 
-// Ultrasonic Sensor
+// Ultrasonic Sensor pins
 const uint8_t c_u8TrigPin = A5;
 const uint8_t c_u8EchoPin = A4;
 
-// IR receiver
+// IR receiver pin
 const uint8_t c_u8IRRecvPin = 12;
 
+// Creates class ElegooCar 
+// You could add your attachments like extra servos or sensors 
 class ElegooCar {
 	Servo	m_USServo;
 	Servo m_USServo2;
@@ -46,6 +46,7 @@ class ElegooCar {
   int16_t m_i16PrevLeft;
   int16_t m_i16PrevRight;
   
+  // Set power on motors
 	void setPwr( int16_t s16Pwr, uint8_t u8ENAPin, uint8_t u8IN1Pin, uint8_t u8IN2Pin ) {
 		if( s16Pwr > 255 )
 			s16Pwr = 255;
@@ -102,7 +103,7 @@ public:
 	
 	~ElegooCar() {
 	}
-	
+  // Set speed and print speed to console
 	void setSpeed( int16_t i16LeftPwr, int16_t i16RightPwr ) {
     if( m_i16PrevLeft != i16LeftPwr ) {
       Serial.print( "L " ); Serial.println( i16LeftPwr );
@@ -116,6 +117,7 @@ public:
     }
 	}
 
+  // Sets up servo 1-4
   void setServo( int8_t s8Heading ) {
 
     if( s8Heading > 85 )
@@ -184,7 +186,7 @@ public:
     m_USServo4.detach();
   }
 
-
+  // Setup and use for the HCSR04 Ultrasonic Sensor 
 #if ELEGOO_HCSR04
   void setUSRate( uint16_t u16Delay ) {
     m_US.startContinuous( u16Delay );

@@ -59,11 +59,11 @@ void autonomous(){
 // Teleop function is called every time there is new data from the DriverStation
 // This function must not block as new data is received every 100ms
 void teleop() {
-  // Get the Right Y axis and use this as the "forward speed" for the robot
-  int fwd = ds.getRY();
+  // Get the Left Y axis and use this as the "forward speed" for the robot
+  int fwd = ds.getLY();
 
-  // Get the Right X axis and use it as the rate of turn
-  int turn = ds.getRX();
+  // Get the Left X axis and use it as the rate of turn
+  int turn = ds.getLX();
 
   // Apply the turn adding the turn rate to the left wheels
   // and subtracting it from the right wheels
@@ -78,7 +78,7 @@ void teleop() {
     right = 0;
 
   // This tells the Elegoo how fast to turn the left and right wheels
-  // Using the values from the right analog stick  
+  // Using the values from the left  analog stick  
   myCar.setSpeed( left, right );       
 
   /* This is where you would likely add your code to control your attachment
@@ -86,17 +86,17 @@ void teleop() {
    */
 
 
-  /* Controls 2 servos by using the X and Y axis of the left analog stick 
+  /* Controls 2 servos by using the X and Y axis of the right  analog stick 
    * Controls 2 servos by extending 90° in either direction
    * 1 face button to extend 90° in one direction
    * Release button for servo position to reset
    */
-  int servoPos = ds.getLX();
-  int servoPos2 = ds.getLY();
-  bool servoPosExtend3 = ds.getButton(0);
-  bool servoPosRetract3 = ds.getButton(1);
-  bool servoPosExtend4 = ds.getButton(2);
-  bool servoPosRetract4 = ds.getButton(3);
+  int servoPos = ds.getRX();
+  int servoPos2 = ds.getRY();
+  bool servoPosExtend3 = ds.getButton(12);
+  bool servoPosRetract3 = ds.getButton(13);
+  bool servoPosExtend4 = ds.getButton(4);
+  bool servoPosRetract4 = ds.getButton(5);
 
   /* Joystick input values range from -256 - 255, but the Servo expects
    * values from 0-180, so the numbers have to be scaled.
@@ -121,14 +121,14 @@ void teleop() {
    * If not keep servo3 at 90° (default)
    */ 
   if (servoPosExtend3 == true){
-    myServo3.write(180);
+    myServo3.write(120);
   }
   else{
     myServo3.write(90);
   }
   
   if (servoPosRetract3 == true){
-    myServo3.write (0);
+    myServo3.write (60);
   }
   // Same as servo3 extend/retract, but for servo4
   if (servoPosExtend4 == true){

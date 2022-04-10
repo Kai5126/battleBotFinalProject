@@ -27,9 +27,19 @@ Servo myServo2;
 Servo myServo3;
 Servo myServo4;
 
+// Create default servo position value
+int servoDefault = 90;
+
+// Sets variables the servo uses to move at a default of 90 
+int servoMover = 90;
+int servoMover2 = 90;
+int servoMover3 = 90;
+int servoMover4 = 90;
+
 void setup() {
  /* Put your setup code here, to run once:
   * The current setup here is initializing the console and attaching the servo pins
+  * As well as setting the servo to default degree value
   */
   Serial.begin( 115200 );
   Serial.println( "Ready..." );
@@ -38,6 +48,10 @@ void setup() {
   myServo2.attach(c_u8ServoPin2);
   myServo3.attach(c_u8ServoPin3);
   myServo4.attach(c_u8ServoPin4);
+  myServo.write(servoDefault); 
+  myServo2.write(servoDefault);
+  myServo3.write(servoDefault);
+  myServo4.write(servoDefault);
 }
 
  /* Autonomous is called 10 times per second during Autonomous mode.
@@ -91,55 +105,69 @@ void teleop() {
    * 1 face button to extend 90° in one direction
    * Release button for servo position to reset
    */
-  int servoPos = ds.getRX();
-  int servoPos2 = ds.getRY();
-  bool servoPosExtend3 = ds.getButton(12);
-  bool servoPosRetract3 = ds.getButton(13);
+  bool servoPosExtend = ds.getButton(0);
+  bool servoPosRetract = ds.getButton(1);
+  bool servoPosExtend2 = ds.getButton(2);
+  bool servoPosRetract2 = ds.getButton(3);
+  bool servoPosExtend3 = ds.getButton(13);
+  bool servoPosRetract3 = ds.getButton(12);
   bool servoPosExtend4 = ds.getButton(4);
   bool servoPosRetract4 = ds.getButton(5);
 
-  /* Joystick input values range from -256 - 255, but the Servo expects
-   * values from 0-180, so the numbers have to be scaled.
-   * These statements are broken into separate lines to prevent the compiler from
-   * calculating the value 90/256.  As an integer this would compute to 0
-   */
-  servoPos *= 90;
-  // servoPos /= 256;
-  servoPos >>= 8;  // Shifting right 8 is the same as dividing by 256 but is faster
-  // Writes the value to the servo
-  myServo.write( servoPos + 90 );
-  
-  // Same function and use as above, only for the 2nd servo
-  servoPos2 *= 90;
-  // servoPos2 /= 256;
-  servoPos2 >>= 8;  // Shifting right 8 is the same as dividing by 256 but is faster
-  // Writes the value to the servo
-  myServo2.write( servoPos2 + 90 );
-
   /* Checks if either the extend or retract buttons are pressed
-   * If one is pressed write the given value to servo3
-   * If not keep servo3 at 90° (default)
+   * If one is pressed write 1+ degree every 10ms 
+   * If not keep servo at last written degree
    */ 
-  if (servoPosExtend3 == true){
-    myServo3.write(120);
+
+// For servo 1 
+  if (servoPosExtend == true) {
+    servoMover = servoMover + 10 ;
+    myServo.write (servoMover);
+    delay(1);
   }
-  else{
-    myServo3.write(90);
+
+  if (servoPosRetract == true) {
+    servoMover = servoMover - 10;
+    myServo.write (servoMover);
+    delay(1);
   }
-  
-  if (servoPosRetract3 == true){
-    myServo3.write (60);
+
+// For servo 2  
+  if (servoPosExtend2 == true) {
+    servoMover2 = servoMover2 + 10;
+    myServo2.write (servoMover2);
+    delay(1);
   }
-  // Same as servo3 extend/retract, but for servo4
-  if (servoPosExtend4 == true){
-    myServo4.write(180);
+
+  if (servoPosRetract2 == true) {
+    servoMover2 = servoMover2 - 10;
+    myServo2.write (servoMover2);
+    delay(1);
+  }
+
+// For servo 3 
+  if (servoPosExtend3 == true) {
+    servoMover3 = servoMover3 + 10; 
+    myServo3.write (servoMover3);
+    delay(1);
+  }
+
+  if (servoPosRetract3 == true) {
+    servoMover3 = servoMover3 - 10;
+    myServo3.write (servoMover3);
+    delay(1);
+  }
+
+// For servo 4
+  if (servoPosExtend4 == true) {
+    myServo4.write(150);
   }
   else{
     myServo4.write(90);
   }
 
-  if (servoPosRetract4 == true){
-    myServo4.write (0);
+  if (servoPosRetract4 == true) {
+    myServo4.write(30);
   }
 }
 

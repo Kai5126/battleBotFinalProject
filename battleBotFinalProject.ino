@@ -95,6 +95,19 @@ void teleop() {
   // Using the values from the left  analog stick  
   myCar.setSpeed( left, right );       
 
+  //Set half speed on car
+if (int halfspeed = ds.getLTrig() > 0){
+  left = left/2;
+  right = right/2;
+  myCar.setSpeed( left, right);
+}
+
+  //Set 75% speed on car
+if (int seventyspeed = ds.getRTrig() > 0){
+  left = left/1.5;
+  right = right/1.5;
+  myCar.setSpeed( left, right);
+}
   /* This is where you would likely add your code to control your attachment
    * For example, the 4 Servo motors are controlled here 
    */

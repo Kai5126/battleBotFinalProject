@@ -15,6 +15,7 @@ DriverStation ds;
 
 // Speeds to set the motor to (0-255)
 #define AUTO_FWD_SPEED 154
+#define AUTO_FULL_SPEED 255
 #define FORWARD_SPEED 255
 #define TURN_SPEED 64
 
@@ -60,14 +61,78 @@ void setup() {
   */  
 void autonomous(){
   int curTime = ds.getStateTimer();
-  myServo.write(90);
-  Serial.println("writing 90");
-  delay(500);
-  Serial.println("delay 500");
-  myServo.write(0);
-  Serial.println("writing 0");
-  delay(500);
-  Serial.println("deleayding 500");
+  if (autonomousMode == true){
+    myCar.setSpeed(-AUTO_FWD_SPEED, -AUTO_FWD_SPEED);
+    delay(150);
+    myCar.setSpeed(AUTO_FULL_SPEED, -AUTO_FULL_SPEED);
+    delay(400);
+    myCar.setSpeed(-AUTO_FWD_SPEED, -AUTO_FWD_SPEED);
+    delay(500);
+    myCar.setSpeed(0,0);
+    myServo2.write(0);
+    myServo3.write(20);
+    myServo4.write(180);
+    delay(500);
+    myServo4.write(90);
+    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
+    delay(450);
+    myCar.setSpeed(0,0);
+    myServo4.write(0);
+    delay(500);
+    myServo2.write(150);
+    delay(500);
+    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
+    delay(250);
+    myCar.setSpeed(0,0);
+    myServo2.write(0);
+    delay(100);
+    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
+    delay(350);
+    myCar.setSpeed(-AUTO_FULL_SPEED, AUTO_FULL_SPEED);
+    delay(850);
+    myCar.setSpeed(-AUTO_FULL_SPEED, -AUTO_FULL_SPEED);
+    delay(100);
+    myCar.setSpeed(0,0);
+    myServo4.write(180);
+    delay(500);
+    myServo4.write(90);
+    myServo2.write(150);
+    
+    myCar.setSpeed(AUTO_FULL_SPEED, -AUTO_FULL_SPEED);
+    delay(600);
+    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
+    delay(100);
+    myServo2.write(0);
+    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
+    delay(400);
+    myCar.setSpeed(-AUTO_FWD_SPEED, AUTO_FWD_SPEED);
+    delay(50);
+    myCar.setSpeed(0,0);
+    myServo4.write(0);
+    delay(500);
+    myServo2.write(150);
+    myCar.setSpeed(-AUTO_FULL_SPEED, AUTO_FULL_SPEED);
+    delay(200);
+    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
+    delay(900);
+    myCar.setSpeed(0,0);
+    myServo2.write(0);
+    delay(100);
+    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
+    delay(100);
+    myCar.setSpeed(AUTO_FULL_SPEED, -AUTO_FULL_SPEED);
+    delay(100);
+    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED); 
+    delay(900);
+    myCar.setSpeed(-AUTO_FULL_SPEED, AUTO_FULL_SPEED);
+    delay(100);
+    myCar.setSpeed(0,0);
+    myServo4.write(180);
+    delay(500);
+    myServo4.write(90);
+    myServo2.write(150); 
+    autonomousMode = false;
+  }
 }
 
 // Teleop function is called every time there is new data from the DriverStation
@@ -172,6 +237,7 @@ if (int seventyspeed = ds.getRTrig() > 0){
   }
 
 // For servo 4
+// This is a different servo that just sets a direction and spins as long as it is held
   if (servoPosExtend4 == true) {
     myServo4.write(150);
   }
@@ -197,10 +263,17 @@ void loop() {
     switch( ds.getGameState() ) {
       case ePreGame:
       myCar.setSpeed( 0, 0 );
-      
+  myServo.write(servoDefault); 
+  myServo2.write(servoDefault);
+  myServo3.write(servoDefault);
+  myServo4.write(servoDefault);
       case ePostGame:
       autonomousMode = true;
-        myCar.setSpeed( 0, 0 );
+        myCar.setSpeed( 0, 0 );  
+  myServo.write(servoDefault); 
+  myServo2.write(servoDefault);
+  myServo3.write(servoDefault);
+  myServo4.write(servoDefault);
         break;
   
       case eAutonomous:
@@ -218,7 +291,5 @@ void loop() {
     // do other updates that need to happen more frequently than 10 times per second here...
     // e.g. checking limit switches...
       if( ds.getGameState() == eAutonomous ) {
-      if(autonomousMode == true){
-    }
   }
 }

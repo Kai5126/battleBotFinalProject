@@ -16,6 +16,7 @@ DriverStation ds;
 // Speeds to set the motor to (0-255)
 #define AUTO_FWD_SPEED 154
 #define AUTO_FULL_SPEED 255
+#define AUTO_MID_SPEED 200
 #define FORWARD_SPEED 255
 #define TURN_SPEED 64
 
@@ -58,6 +59,10 @@ void setup() {
  /* Autonomous is called 10 times per second during Autonomous mode.
   * This function must not block as new data is received every 100ms
   * Will be used to drive to zone D while picking up multiple cups
+  * Current auto normally gets 6 cups - with 2 in starting zone upright
+  * Possibly even get 7 or 8 depending on starting position 
+  * Could get more than 8 by extending the code further
+  * since this auto takes under 15 seconds
   */  
 void autonomous(){
   int curTime = ds.getStateTimer();
@@ -65,7 +70,7 @@ void autonomous(){
     myCar.setSpeed(-AUTO_FWD_SPEED, -AUTO_FWD_SPEED);
     delay(150);
     myCar.setSpeed(AUTO_FULL_SPEED, -AUTO_FULL_SPEED);
-    delay(400);
+    delay(350);
     myCar.setSpeed(-AUTO_FWD_SPEED, -AUTO_FWD_SPEED);
     delay(500);
     myCar.setSpeed(0,0);
@@ -75,7 +80,7 @@ void autonomous(){
     delay(500);
     myServo4.write(90);
     myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
-    delay(450);
+    delay(400);
     myCar.setSpeed(0,0);
     myServo4.write(0);
     delay(500);
@@ -87,9 +92,9 @@ void autonomous(){
     myServo2.write(0);
     delay(100);
     myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
-    delay(350);
-    myCar.setSpeed(-AUTO_FULL_SPEED, AUTO_FULL_SPEED);
-    delay(850);
+    delay(300);
+    myCar.setSpeed(-AUTO_MID_SPEED, AUTO_MID_SPEED);
+    delay(1200);
     myCar.setSpeed(-AUTO_FULL_SPEED, -AUTO_FULL_SPEED);
     delay(100);
     myCar.setSpeed(0,0);
@@ -99,9 +104,9 @@ void autonomous(){
     myServo2.write(150);
     
     myCar.setSpeed(AUTO_FULL_SPEED, -AUTO_FULL_SPEED);
-    delay(600);
-    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
-    delay(100);
+    delay(500);
+    myCar.setSpeed(-AUTO_FWD_SPEED, -AUTO_FWD_SPEED);
+    delay(400);
     myServo2.write(0);
     myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
     delay(400);
@@ -113,24 +118,24 @@ void autonomous(){
     myServo2.write(150);
     myCar.setSpeed(-AUTO_FULL_SPEED, AUTO_FULL_SPEED);
     delay(200);
-    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
-    delay(900);
+    myCar.setSpeed(AUTO_FULL_SPEED, AUTO_FULL_SPEED);
+    delay(850);
     myCar.setSpeed(0,0);
     myServo2.write(0);
-    delay(100);
     myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
-    delay(100);
-    myCar.setSpeed(AUTO_FULL_SPEED, -AUTO_FULL_SPEED);
-    delay(100);
-    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED); 
-    delay(900);
-    myCar.setSpeed(-AUTO_FULL_SPEED, AUTO_FULL_SPEED);
-    delay(100);
-    myCar.setSpeed(0,0);
+    delay(600);
     myServo4.write(180);
     delay(500);
     myServo4.write(90);
-    myServo2.write(150); 
+    myServo2.write(150);
+    myCar.setSpeed(AUTO_FULL_SPEED, -AUTO_FULL_SPEED);
+    delay(300);
+    myCar.setSpeed(0,0);
+    myServo2.write(0);
+    myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
+    delay(2300);
+    myCar.setSpeed(0,0);
+    myServo2.write(150);
     autonomousMode = false;
   }
 }

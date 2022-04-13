@@ -123,7 +123,7 @@ void autonomous(){
     myCar.setSpeed(0,0);
     myServo2.write(0);
     myCar.setSpeed(AUTO_FWD_SPEED, AUTO_FWD_SPEED);
-    delay(600);
+    delay(800);
     myServo4.write(180);
     delay(500);
     myServo4.write(90);

@@ -1,4 +1,4 @@
-// Demo code taken from WWFirst, further modified by @tQbed
+// Demo code taken from WWFirst, further modified by @tqbed
 
 //Necessary libraries 
 #include <Servo.h>
